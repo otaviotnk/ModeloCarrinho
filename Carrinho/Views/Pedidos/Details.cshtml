@@ -39,5 +39,15 @@
 <div>
     <hr />
     <a class="btn btn-danger" asp-action="Index"><span class="fas fa-arrow-left"></span> Voltar</a>
-    <a class="btn btn-success"><span class="fas fa-check"></span> Finalizar Pedido</a>
+    <button class="btn btn-success example-popover" data-container="body" data-toggle="popover" data-placement="top" data-content="Este é um exemplo de carrinho de compras, não tem nada além disto." title="Atenção!"><span class="fas fa-check"></span> Finalizar Pedido</button>
 </div>
+
+@section Scripts{ 
+<script type="text/javascript">
+    $(function () {
+        $('.example-popover').popover({
+            container: 'body'
+        })
+    })
+</script>
+}

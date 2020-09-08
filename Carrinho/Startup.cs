@@ -26,7 +26,7 @@ namespace Carrinho
 
             services.AddScoped<PopularBanco>();
         }
-        
+
         //Incluso o método para popular o Banco de Dados caso não esteja populado
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PopularBanco popularBanco)
         {
@@ -52,7 +52,8 @@ namespace Carrinho
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Pedidos}/{action=Index}/{id?}");
+                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                    
             });
         }
     }

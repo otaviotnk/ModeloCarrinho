@@ -3,6 +3,7 @@ using Carrinho.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace Carrinho.Controllers
                 return NotFound();
             }
             //######-Aqui tá recebendo uma lista de produtos no pedido, tá certo-######\\
-            var pedido  = await _context.Pedido.Include(p => p.PedidosItens)
+            var pedido = await _context.Pedido.Include(p => p.PedidosItens)
                                                 .Include("PedidosItens.Produto")
                                                 .FirstOrDefaultAsync(p => p.Id == id);
 
@@ -42,14 +43,14 @@ namespace Carrinho.Controllers
             }
 
             return View(pedido);
-        }       
+        }
 
         // GET: Pedidos/Create
         public IActionResult Create()
         {
             return View();
         }
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Pedido pedido)
@@ -58,7 +59,7 @@ namespace Carrinho.Controllers
             {
                 _context.Add(pedido);
                 await _context.SaveChangesAsync();
-                
+
                 return RedirectToAction(nameof(CriarCarrinho), pedido);
             }
             return View(pedido);
@@ -67,7 +68,7 @@ namespace Carrinho.Controllers
         public IActionResult CriarCarrinho()
         {
             ViewData["ProdutoId"] = new SelectList(_context.Produto, "Id", "Nome");
-            
+
             return View();
         }
 
@@ -77,25 +78,32 @@ namespace Carrinho.Controllers
         {
             //Estava setando um Id no id do pedidoItem, resolvi assim por enquanto(Autoincrement)
             pedidoItem.Id = 0;
-            
+
             pedidoItem.PedidoId = pedido.Id;
+            
+            //Busca um PedidoId que tenha o mesmo ProdutoId informado
+            //Se não encontrar, retorna um Null
+            var pedidoItemNoBanco = _context.PedidoItem
+                                    .Where(p=> p.ProdutoId == pedidoItem.ProdutoId)
+                                    .FirstOrDefault(p=> p.PedidoId == pedidoItem.PedidoId);           
 
-            var pedidoItemNoBanco = _context.PedidoItem.FirstOrDefault(p => p.PedidoId == pedidoItem.PedidoId);
-
+            //Busca se já existe um PedidoId com o ProdutoId informado e retorna um bool
+            var buscaProdutoExistente = _context.PedidoItem
+                                    .Where(p => p.PedidoId == pedidoItem.PedidoId && p.ProdutoId == pedidoItem.ProdutoId)
+                                    .Any();
             if (ModelState.IsValid)
             {
-                //Verifica se já existe o produto no Carrinho, se já tiver, somente acrescenta a quantidade e não um novo produto.
-                if (pedidoItemNoBanco != null)
-                {                    
-                    if (pedidoItem.ProdutoId == pedidoItemNoBanco.ProdutoId)
-                    {                        
-                        pedidoItemNoBanco.Quantidade += pedidoItem.Quantidade;
+                //Verifica se já existe o produto no Carrinho
+                //Se já tiver, somente acrescenta a quantidade e não um novo produto.
+                if (buscaProdutoExistente == true)
+                {                   
+                    pedidoItemNoBanco.Quantidade += pedidoItem.Quantidade;
 
-                        _context.PedidoItem.Update(pedidoItemNoBanco);
-                        await _context.SaveChangesAsync();
-                        
-                        return RedirectToAction(nameof(Details), pedido);
-                    }
+                    _context.PedidoItem.Update(pedidoItemNoBanco);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Details), pedido);
+
                 }
                 _context.PedidoItem.Add(pedidoItem);
                 await _context.SaveChangesAsync();
@@ -105,7 +113,7 @@ namespace Carrinho.Controllers
                                         .Include("PedidosItens.Produto")
                                         .FirstOrDefaultAsync(m => m.Id == pedido.Id);
 
-                return RedirectToAction(nameof(Details),pedido);
+                return RedirectToAction(nameof(Details), pedido);
             }
 
             return View(pedidoItem);
@@ -119,7 +127,7 @@ namespace Carrinho.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedido.FindAsync(id);            
+            var pedido = await _context.Pedido.FindAsync(id);
 
             if (pedido == null)
             {
@@ -127,7 +135,7 @@ namespace Carrinho.Controllers
             }
             return View(pedido);
         }
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Pedido pedido)
@@ -171,7 +179,7 @@ namespace Carrinho.Controllers
             var pedido = await _context.Pedido.Include(p => p.PedidosItens)
                                                 .Include("PedidosItens.Produto")
                                                 .FirstOrDefaultAsync(p => p.Id == id);
-            
+
             if (pedido == null)
             {
                 return NotFound();
@@ -193,14 +201,14 @@ namespace Carrinho.Controllers
 
         //Aqui ele recebe o Id do PedidoId selecionado(ou seja, o produto que quer deletar)
         public async Task<IActionResult> DeletarItemCarrinho(int id)
-        {            
-            var pedidoItem = _context.PedidoItem.FirstOrDefault(p => p.Id == id);            
+        {
+            var pedidoItem = _context.PedidoItem.FirstOrDefault(p => p.Id == id);
 
             _context.PedidoItem.Remove(pedidoItem);
-            await _context.SaveChangesAsync();            
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id = pedidoItem.PedidoId });
-            
+
         }
 
         private bool PedidoExists(int id)
