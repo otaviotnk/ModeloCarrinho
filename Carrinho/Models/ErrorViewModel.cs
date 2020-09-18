@@ -1,5 +1,3 @@
-using System;
-
 namespace Carrinho.Models
 {
     public class ErrorViewModel

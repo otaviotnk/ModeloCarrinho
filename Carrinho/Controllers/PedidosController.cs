@@ -3,7 +3,6 @@ using Carrinho.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,10 +31,8 @@ namespace Carrinho.Controllers
             {
                 return NotFound();
             }
-            //######-Aqui tá recebendo uma lista de produtos no pedido, tá certo-######\\
-            var pedido = await _context.Pedido.Include(p => p.PedidosItens)
-                                                .Include("PedidosItens.Produto")
-                                                .FirstOrDefaultAsync(p => p.Id == id);
+            //######---Recebe uma lista de produtos no pedido---######\\
+            Pedido pedido = await ObterProdutosDoPedido(id);
 
             if (pedido == null)
             {
@@ -43,7 +40,7 @@ namespace Carrinho.Controllers
             }
 
             return View(pedido);
-        }
+        }        
 
         // GET: Pedidos/Create
         public IActionResult Create()
@@ -60,12 +57,12 @@ namespace Carrinho.Controllers
                 _context.Add(pedido);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(CriarCarrinho), pedido);
+                return RedirectToAction(nameof(Carrinho), pedido);
             }
             return View(pedido);
         }
 
-        public IActionResult CriarCarrinho()
+        public IActionResult Carrinho()
         {
             ViewData["ProdutoId"] = new SelectList(_context.Produto, "Id", "Nome");
 
@@ -74,50 +71,38 @@ namespace Carrinho.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CriarCarrinho(Pedido pedido, PedidoItem pedidoItem)
+        public async Task<IActionResult> Carrinho(Pedido pedido, PedidoItem pedidoItem)
         {
             //Estava setando um Id no id do pedidoItem, resolvi assim por enquanto(Autoincrement)
             pedidoItem.Id = 0;
 
             pedidoItem.PedidoId = pedido.Id;
-            
-            //Busca um PedidoId que tenha o mesmo ProdutoId informado
-            //Se não encontrar, retorna um Null
-            var pedidoItemNoBanco = _context.PedidoItem
-                                    .Where(p=> p.ProdutoId == pedidoItem.ProdutoId)
-                                    .FirstOrDefault(p=> p.PedidoId == pedidoItem.PedidoId);           
 
-            //Busca se já existe um PedidoId com o ProdutoId informado e retorna um bool
-            var buscaProdutoExistente = _context.PedidoItem
-                                    .Where(p => p.PedidoId == pedidoItem.PedidoId && p.ProdutoId == pedidoItem.ProdutoId)
-                                    .Any();
+            var pedidoItemNoBanco = BuscaPedido(pedidoItem);
+
             if (ModelState.IsValid)
-            {
-                //Verifica se já existe o produto no Carrinho
-                //Se já tiver, somente acrescenta a quantidade e não um novo produto.
-                if (buscaProdutoExistente == true)
-                {                   
+            {                
+                if (ExisteProdutoPedido(pedidoItem) == true)
+                {
+                    //Se já tiver, somente acrescenta a quantidade e não um novo produto.
                     pedidoItemNoBanco.Quantidade += pedidoItem.Quantidade;
 
-                    _context.PedidoItem.Update(pedidoItemNoBanco);
+                    //Se tirar o Update(pedidoItemNoBanco), ele salva só o que foi alterado, e não todo o registro                    
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Details), pedido);
-
                 }
-                _context.PedidoItem.Add(pedidoItem);
-                await _context.SaveChangesAsync();
 
-                //Aqui, antes de enviar quando recarrega a página, o "Pedido" e "Produtos" recebe os itens para poder exibir
-                pedido = await _context.Pedido.Include(p => p.PedidosItens)
-                                        .Include("PedidosItens.Produto")
-                                        .FirstOrDefaultAsync(m => m.Id == pedido.Id);
+                _context.PedidoItem.Add(pedidoItem);
+                await _context.SaveChangesAsync();                
+
+                pedido = await ObterProdutosDoPedido(pedido.Id);
 
                 return RedirectToAction(nameof(Details), pedido);
             }
 
             return View(pedidoItem);
-        }
+        }        
 
         // GET: Pedidos/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -175,10 +160,8 @@ namespace Carrinho.Controllers
             {
                 return NotFound();
             }
-            //Incluindo os dados do PedidoItem e objeto Produto
-            var pedido = await _context.Pedido.Include(p => p.PedidosItens)
-                                                .Include("PedidosItens.Produto")
-                                                .FirstOrDefaultAsync(p => p.Id == id);
+
+            var pedido = await ObterProdutosDoPedido(id);
 
             if (pedido == null)
             {
@@ -197,17 +180,36 @@ namespace Carrinho.Controllers
             _context.Pedido.Remove(pedido);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        //Aqui ele recebe o Id do PedidoId selecionado(ou seja, o produto que quer deletar)
+        }        
         public async Task<IActionResult> DeletarItemCarrinho(int id)
         {
+            //Aqui ele recebe o Id do PedidoId selecionado(ou seja, o produto que quer deletar)
             var pedidoItem = _context.PedidoItem.FirstOrDefault(p => p.Id == id);
 
             _context.PedidoItem.Remove(pedidoItem);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id = pedidoItem.PedidoId });
+
+        }
+        private bool ExisteProdutoPedido(PedidoItem pedidoItem)
+        {
+            //Busca um PedidoId que tenha o mesmo ProdutoId informado, se não encontrar, retorna false
+            return _context.PedidoItem.Where(p => p.PedidoId == pedidoItem.PedidoId && p.ProdutoId == pedidoItem.ProdutoId).Any();
+        }
+
+        private PedidoItem BuscaPedido(PedidoItem pedidoItem)
+        {
+            //Busca se já existe um PedidoId com o ProdutoId informado e retorna Null
+            return _context.PedidoItem.Where(p => p.ProdutoId == pedidoItem.ProdutoId)
+                                      .FirstOrDefault(p => p.PedidoId == pedidoItem.PedidoId);
+        }
+
+        private async Task<Pedido> ObterProdutosDoPedido(int? id)
+        {
+            return await _context.Pedido.Include(p => p.PedidosItens)
+                                        .ThenInclude(p => p.Produto)
+                                        .FirstOrDefaultAsync(p => p.Id == id);
 
         }
 

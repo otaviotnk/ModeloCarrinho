@@ -180,6 +180,6 @@ D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Ra
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Details.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Edit.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Index.cshtml.g.cs
-D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\CriarCarrinho.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\_ListaCarrinho.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\libman.json
+D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Carrinho.cshtml.g.cs

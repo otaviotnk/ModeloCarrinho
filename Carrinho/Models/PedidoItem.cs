@@ -10,6 +10,7 @@ namespace Carrinho.Models
         //----------------------------------------//
         [DisplayName("Produto")]
         public int ProdutoId { get; set; }
+
         [DisplayName("Pedido")]
         public int PedidoId { get; set; }
         public Produto Produto { get; set; }
@@ -22,7 +23,6 @@ namespace Carrinho.Models
             ProdutoId = produtoId;
             PedidoId = pedidoId;
         }
-
         public PedidoItem()
         {
         }

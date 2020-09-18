@@ -20,6 +20,7 @@ namespace Carrinho.Models
         }
         public Pedido()
         {
+
         }
     }
 }
