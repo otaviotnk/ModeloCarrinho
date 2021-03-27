@@ -1,6 +1,5 @@
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\appsettings.json
-D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\Carrinho.exe
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Carrinho.csprojAssemblyReference.cache
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Carrinho.AssemblyInfoInputs.cache
@@ -173,8 +172,6 @@ D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Ra
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Produtos\Details.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Produtos\Edit.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Produtos\Index.cshtml.g.cs
-D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.json
-D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\Properties\serviceDependencies.local.json
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Create.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Delete.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Details.cshtml.g.cs
@@ -183,3 +180,4 @@ D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Ra
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\_ListaCarrinho.cshtml.g.cs
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\bin\Debug\netcoreapp3.1\libman.json
 D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\Razor\Views\Pedidos\Carrinho.cshtml.g.cs
+D:\Repositórios Visual Studio 2019\Carrinho\Carrinho\obj\Debug\netcoreapp3.1\scopedcss\bundle\Carrinho.styles.css

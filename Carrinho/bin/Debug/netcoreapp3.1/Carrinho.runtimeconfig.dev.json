@@ -2,7 +2,8 @@
   "runtimeOptions": {
     "additionalProbingPaths": [
       "C:\\Users\\otavi\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\otavi\\.nuget\\packages"
+      "C:\\Users\\otavi\\.nuget\\packages",
+      "C:\\Microsoft\\Xamarin\\NuGet"
     ]
   }
 }
