@@ -31,7 +31,6 @@ namespace Carrinho.Controllers
             {
                 return NotFound();
             }
-            //######---Recebe uma lista de produtos no pedido---######\\
             Pedido pedido = await ObterProdutosDoPedido(id);
 
             if (pedido == null)
@@ -73,7 +72,6 @@ namespace Carrinho.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Carrinho(Pedido pedido, PedidoItem pedidoItem)
         {
-            //Estava setando um Id no id do pedidoItem, resolvi assim por enquanto(Autoincrement)
             pedidoItem.Id = 0;
 
             pedidoItem.PedidoId = pedido.Id;
@@ -84,10 +82,8 @@ namespace Carrinho.Controllers
             {                
                 if (ExisteProdutoPedido(pedidoItem) == true)
                 {
-                    //Se já tiver, somente acrescenta a quantidade e não um novo produto.
                     pedidoItemNoBanco.Quantidade += pedidoItem.Quantidade;
 
-                    //Se tirar o Update(pedidoItemNoBanco), ele salva só o que foi alterado, e não todo o registro                    
                     await _context.SaveChangesAsync();
 
                     return RedirectToAction(nameof(Details), pedido);
@@ -183,7 +179,6 @@ namespace Carrinho.Controllers
         }        
         public async Task<IActionResult> DeletarItemCarrinho(int id)
         {
-            //Aqui ele recebe o Id do PedidoId selecionado(ou seja, o produto que quer deletar)
             var pedidoItem = _context.PedidoItem.FirstOrDefault(p => p.Id == id);
 
             _context.PedidoItem.Remove(pedidoItem);
@@ -194,13 +189,11 @@ namespace Carrinho.Controllers
         }
         private bool ExisteProdutoPedido(PedidoItem pedidoItem)
         {
-            //Busca um PedidoId que tenha o mesmo ProdutoId informado, se não encontrar, retorna false
             return _context.PedidoItem.Where(p => p.PedidoId == pedidoItem.PedidoId && p.ProdutoId == pedidoItem.ProdutoId).Any();
         }
 
         private PedidoItem BuscaPedido(PedidoItem pedidoItem)
         {
-            //Busca se já existe um PedidoId com o ProdutoId informado e retorna Null
             return _context.PedidoItem.Where(p => p.ProdutoId == pedidoItem.ProdutoId)
                                       .FirstOrDefault(p => p.PedidoId == pedidoItem.PedidoId);
         }

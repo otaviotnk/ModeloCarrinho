@@ -13,7 +13,6 @@ namespace Carrinho.Data
 
         public void Seed()
         {
-            //Verifica se há algum dado já populado no banco, se não houver, popula conforme abaixo:
             if (_context.Produto.Any() || _context.Pedido.Any() || _context.PedidoItem.Any())
             {
                 return;
