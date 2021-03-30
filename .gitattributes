@@ -1,2 +1,2 @@
-static/* linguist-vendored
-Carrinho/wwwroot/* linguist-vendored
+* linguist-vendored
+*.cs linguist-vendored=false
