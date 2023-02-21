@@ -24,21 +24,19 @@ namespace Carrinho
             services.AddDbContext<CarrinhoContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("CarrinhoContext")));
 
-            services.AddScoped<PopularBanco>();
+            services.AddScoped<DatabaseSeeder>();
         }
 
-        //Incluso o método para popular o Banco de Dados caso não esteja populado
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, PopularBanco popularBanco)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DatabaseSeeder databaseSeeder)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                popularBanco.Seed();
+                databaseSeeder.SeedAsync();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -53,7 +51,7 @@ namespace Carrinho
                 endpoints.MapControllerRoute(
                     name: "default",
                      pattern: "{controller=Home}/{action=Index}/{id?}");
-                    
+
             });
         }
     }

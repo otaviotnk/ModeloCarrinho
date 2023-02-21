@@ -8,8 +8,8 @@ namespace Carrinho.Data
         public CarrinhoContext (DbContextOptions<CarrinhoContext> options)
             : base(options) {}
 
-        public DbSet<Produto> Produto { get; set; }
-        public DbSet<Pedido> Pedido { get; set; }
-        public DbSet<PedidoItem> PedidoItem { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Purchase> Purchases { get; set; }
+        public DbSet<PurchaseItem> PurchaseItems { get; set; }
     }
 }
